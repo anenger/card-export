@@ -323,7 +323,7 @@ if __name__ == "__main__":
                         if (saver != {}):
                             if (saver['saveSettings']):
                                 try:
-                                    with open(saver['saveFile'] + ".json", "w") as f:
+                                    with open("imports/" + saver['saveFile'] + ".json", "w") as f:
                                         json.dump(promptsettings, f)
                                 except Exception as e:
                                     print(e)
