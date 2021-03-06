@@ -1,26 +1,27 @@
 import requests
 import stripe
 from utils.card import Card
+from utils.generators import Generator
 
 class StripeSession:
 
     def __init__(self, stripekey):
         stripe.api_key = stripekey
 
-    def createCardholder(self):
+    def createCardholder(self, generator):
         try:
             cardholder = stripe.issuing.Cardholder.create(
-                name='Jenny Rosen',
-                email='jenny.rosen@example.com',
-                phone_number='+18008675309',
+				type="individual",
+                name=' '.join(generator.genName()),
+                email=generator.genEmail(),
+                phone_number='+1' + generator.genPhone(),
                 status='active',
-                type='individual',
                 billing={
                     'address': {
-                        'line1': '1234 Main Street',
-                        'city': 'San Francisco',
-                        'state': 'CA',
-                        'postal_code': '94111',
+                        'line1': generator.genStreet(),
+                        'city': generator.city,
+                        'state': generator.state,
+                        'postal_code': generator.zip,
                         'country': 'US',
                     },
                 },
@@ -63,6 +64,16 @@ class StripeSession:
             cards.append(carddetails)
         return cards
 
+    def createCardsNewCardholders(self, number, generator):
+        cards = []
+        for i in range(number):
+            cardholderid = self.createCardholder(generator)
+            cardid = self.createCard(cardholderid)
+            self.activateCard(cardid)
+            carddetails = self.getCardDetails(cardid)
+            cards.append(carddetails)
+        return cards
+
     def createCard(self, cardholder):
         try:
             card = stripe.issuing.Card.create(
@@ -84,7 +95,7 @@ class StripeSession:
                 unused = True
             else:
                 unused = False
-            return Card(card.id, "Visa", card.number, card.cvc, card.exp_month, card.exp_year, unused)
+            return Card(card.id, "Visa", card.number, card.cvc, '{:0>2}'.format(card.exp_month), int(str(card.exp_year)[2:]), unused)
         except Exception as e:
             print(e)
             print("Could not retrieve card.")

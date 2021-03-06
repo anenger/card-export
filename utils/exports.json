@@ -86,7 +86,15 @@
 		"Billing City":"",
 		"Billing Zip":"",
 		"Billing State":"",
-		"Billing Country":""
+		"Billing Country":"",
+		"Shipping First Name":"",
+		"Shipping Last Name":"",
+		"Shipping Address 1":"",
+		"Shipping Address 2":"",
+		"Shipping City":"",
+		"Shipping Zip":"",
+		"Shipping State":"",
+		"Shipping Country":""
 	},
 	"import":{
 		"Merchant":"",

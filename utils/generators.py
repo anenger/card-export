@@ -71,7 +71,7 @@ class Generator:
     state = ""
     zip = ""
 
-    def __init__(self, firstname, lastname, email, phone, addressline1, addressline2, city, state, zip, prefix, jigPhone, jigAddress, jigLine2):
+    def __init__(self, firstname, lastname, email, phone, addressline1, addressline2, city, state, zip, prefix, jigPhone, jigAddress, jigLine2, webhook, proxy):
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
@@ -85,6 +85,8 @@ class Generator:
         self.jigPhone = jigPhone
         self.jigAddress = jigAddress
         self.jigLine2 = jigLine2
+        self.webhook = webhook
+        self.proxy = proxy
 
     def randomword(self, length):
         letters = string.ascii_uppercase

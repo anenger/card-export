@@ -45,10 +45,10 @@ class CSVIO:
             if not file_exists:
                 writer.writeheader()
             for card in cards:
-                export = self.templates['ezmode2'].copy()
+                export = self.templates['wop'].copy()
                 export['Profile Name'] = card.cardid
-                export['Webhook'] = self.generator.getWebhook()
-                export['Proxy'] = self.generator.getWebhook()
+                export['Webhook'] = self.generator.webhook
+                export['Proxy'] = self.generator.proxy
                 export['Email'] = self.generator.genEmail()
                 export['Phone'] = self.generator.genPhone()
                 export['Card'] = card.number

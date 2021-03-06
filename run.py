@@ -167,9 +167,8 @@ questions = [
     {
         'type': 'input',
         'name': 'stripeCardholder',
-        'message': 'Enter a cardholder id which you would like to create new cards under.',
-        'when': lambda answers: answers.get('stripeNewCards', "") == 'new',
-        'validate': NotBlankValidator
+        'message': 'Enter a cardholder id which you would like to create new cards under. (or leave blank for new cardholders)',
+        'when': lambda answers: answers.get('stripeNewCards', "") == 'new'
     },
     {
         'type': 'list',
@@ -345,12 +344,10 @@ if __name__ == "__main__":
         print("Goodbye!")
         exit()
 
-    if ('emailPrefix' in promptsettings):
-        prefix = promptsettings['emailPrefix']
-    else:
-        prefix = ""
-
-    generator = Generator(promptsettings['firstNames'].split(','), promptsettings['lastNames'].split(','), promptsettings['email'], promptsettings['phoneNumber'], promptsettings['addressLine1'], promptsettings['addressLine2'], promptsettings['city'], promptsettings['state'], promptsettings['zipCode'], prefix, promptsettings['phoneJig'], promptsettings['addressJig'], promptsettings['addressJig2'])
+    generator = Generator(promptsettings['firstNames'].split(','), promptsettings['lastNames'].split(','), promptsettings['email'], 
+    promptsettings['phoneNumber'], promptsettings['addressLine1'], promptsettings['addressLine2'], promptsettings['city'], 
+    promptsettings['state'], promptsettings['zipCode'], promptsettings.get('emailPrefix', ""), promptsettings['phoneJig'], promptsettings['addressJig'], promptsettings['addressJig2'], 
+    promptsettings.get('wopWebhook', ""), promptsettings.get('wopProxy', ""))
 
     if (promptsettings['cardProvider'] == "privacy"):
         privacysession = PrivacySession(promptsettings['privacyEmail'], promptsettings['privacyPassword'])
@@ -363,10 +360,14 @@ if __name__ == "__main__":
     elif (promptsettings['cardProvider'] == "stripe"):
         stripesession = StripeSession(promptsettings['stripeToken'])
         if (promptsettings['stripeNewCards'] == "new"):
-            print("Generating {0} cards with cardholder {1}".format(
-                promptsettings['stripeValue'], promptsettings['stripeCardholder']))
-            cardlist = stripesession.createCards(int(promptsettings['stripeValue']), promptsettings['stripeCardholder'])
-            print("Created {} cards.".format(len(cardlist)))
+            if promptsettings['stripeCardholder'] == "":
+                print("Generating {0} cards with new cardholders".format(promptsettings['stripeValue']))
+                cardlist = stripesession.createCardsNewCardholders(int(promptsettings['stripeValue']), generator)
+                print("Created {} cards.".format(len(cardlist)))
+            else:
+                print("Generating {0} cards under cardholder {1}".format(promptsettings['stripeValue'], promptsettings['stripeCardholder']))
+                cardlist = stripesession.createCards(int(promptsettings['stripeValue']), promptsettings['stripeCardholder'])
+                print("Created {} cards.".format(len(cardlist)))
         else:
             print("Getting all stripe cards...")
             cardlist = stripesession.getAllCards(promptsettings.get('stripeCardholderPreexisting', None))
