@@ -1,12 +1,12 @@
-# privacy-export
+# card-export
 
-Hello! Welcome to my Privacy Card Exporter.  
+Hello! Welcome to my VCC Card Exporter.  
 
 This is a python3 script. Please run it in python3 or else you will have issues.
 
 # To Run:
 
-Navigate to the folder (probably privacy-export-master)
+Navigate to the folder (probably card-export)
 
 Install the following required dependencies using pip:
 
