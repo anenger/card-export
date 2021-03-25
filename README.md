@@ -21,3 +21,5 @@ If you are exporting stripe:
 
 If you are exporting privacy:
 - The script will check against all transactions, this means if there is a card that seems "unused", it may not show up due to previous authorizations or otherwise
+
+You may notice a citi.py file, hopefully adding that soon :) 
