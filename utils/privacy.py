@@ -164,7 +164,7 @@ class PrivacySession:
                             cardtype = "Visa"
                         else:
                             cardtype = "MasterCard"
-                        cardlist.append(Card(card['cardID'], cardtype, card['PAN'], card['CVV'], card['expMonth'], card['expYear'], card['unused']))
+                        cardlist.append(Card(card['cardID'], cardtype, card['PAN'], card['CVV'], card['expMonth'], int(str(card['expYear'])[2:]), card['unused']))
                 return cardlist
             except Exception as e:
                 print(e)

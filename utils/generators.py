@@ -118,9 +118,8 @@ class Generator:
             if (spaceindex >= 0):
                 number = self.addressline1[:spaceindex]
                 street = self.addressline1[spaceindex + 1:]
-                charactergen = random.choice(
-                    string.ascii_uppercase) + random.choice(string.ascii_uppercase)
-                return str(number) + ' ' + charactergen + ' ' + street
+                charactergen = random.choice(string.ascii_uppercase)
+                return str(number) + charactergen + ' ' + street
         else:
             return self.addressline1
 	

@@ -1,7 +1,10 @@
-import requests
 import stripe
+import time
+import json
+import os
 from utils.card import Card
 from utils.generators import Generator
+from utils.csvutils import CSVIO
 
 class StripeSession:
 
@@ -11,7 +14,7 @@ class StripeSession:
     def createCardholder(self, generator):
         try:
             cardholder = stripe.issuing.Cardholder.create(
-				type="individual",
+                type="individual",
                 name=' '.join(generator.genName()),
                 email=generator.genEmail(),
                 phone_number='+1' + generator.genPhone(),
@@ -40,20 +43,44 @@ class StripeSession:
             print(e)
             print("Could not activate card.")
             return False
-
+            
+    def getCardsWithCardholder(self, cardholder):
+        cards = stripe.issuing.Card.list(limit=100,status="active",cardholder=cardholder)
+        carddata = []
+        for card in cards['data']:
+            carddata.append(self.getCardDetails(card['id']))
+        return carddata
+            
     def getAllCards(self, cardholder):
+        carddata = []
         if cardholder:
-            cards = stripe.issuing.Card.list(limit=100,status="active",cardholder=cardholder)
-            carddata = []
-            for card in cards['data']:
-                carddata.append(self.getCardDetails(card['id']))
-            return carddata
+            carddata = self.getCardsWithCardholder(cardholder)
         else:
-            cards = stripe.issuing.Card.list(limit=100,status="active")
-            carddata = []
-            for card in cards['data']:
-                carddata.append(self.getCardDetails(card['id']))
-            return carddata
+            timestr = time.strftime("%Y%m%d-%H%M%S")
+            templates = None
+            with open("utils/exports.json", "r") as f:
+                templates = json.load(f)
+            cardholders = self.getAllCardholders()
+            for cardholder in cardholders:
+                file_exists = os.path.isfile("exports/" + timestr + "cardfile.tsv")
+                generator = self.getCardholderDetails(cardholder.id)
+                cards = self.getCardsWithCardholder(cardholder.id)
+                csv = CSVIO("", "exports/" + timestr + "cardfile.tsv", templates, generator)
+                csv.writeEZMode(cards, file_exists)
+        return carddata
+    
+    def getCardholderDetails(self, cardholder):
+        cardholder = stripe.issuing.Cardholder.retrieve(cardholder)
+        name = cardholder.name.split()
+        generator = Generator([name[0]], [name[1]], cardholder.email, str(cardholder.phone_number)[2:], 
+        cardholder.billing.address.line1, cardholder.billing.address.line2, cardholder.billing.address.city, 
+        cardholder.billing.address.state, cardholder.billing.address.postal_code, None, False, False, False, None, None)
+        print(generator.genName())
+        return generator
+
+    def getAllCardholders(self):
+        cardholders = stripe.issuing.Cardholder.list(limit=100, status="active")
+        return cardholders
 
     def createCards(self, number, cardholder):
         cards = []

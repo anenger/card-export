@@ -371,12 +371,16 @@ if __name__ == "__main__":
         else:
             print("Getting all stripe cards...")
             cardlist = stripesession.getAllCards(promptsettings.get('stripeCardholderPreexisting', None))
+            print("Got all cards, exporting...")
+            quit()
     else:
         print("Importing cards from {}".format(promptsettings['ownImport']))
         csvimport = CSVIO("imports/" + promptsettings['ownImport'] + ".csv", "", templates, generator)
         cardlist = csvimport.readCSV()
 
     timestr = time.strftime("%Y%m%d-%H%M%S")
+
+    print(cardlist)
             
     for i in range(0, int(loader['quantity'])):
         print("Cards received, now generating profiles...")
