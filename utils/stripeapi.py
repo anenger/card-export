@@ -75,7 +75,6 @@ class StripeSession:
         generator = Generator([name[0]], [name[1]], cardholder.email, str(cardholder.phone_number)[2:], 
         cardholder.billing.address.line1, cardholder.billing.address.line2, cardholder.billing.address.city, 
         cardholder.billing.address.state, cardholder.billing.address.postal_code, None, False, False, False, None, None)
-        print(generator.genName())
         return generator
 
     def getAllCardholders(self):

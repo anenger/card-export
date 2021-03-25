@@ -379,8 +379,6 @@ if __name__ == "__main__":
         cardlist = csvimport.readCSV()
 
     timestr = time.strftime("%Y%m%d-%H%M%S")
-
-    print(cardlist)
             
     for i in range(0, int(loader['quantity'])):
         print("Cards received, now generating profiles...")
