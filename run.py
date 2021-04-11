@@ -5,6 +5,7 @@ import string
 import sys
 import time
 import os
+import uuid
 from pprint import pprint
 
 import regex
@@ -174,7 +175,7 @@ questions = [
         'type': 'list',
         'name': 'export',
         'message': 'Which style would you like the cards exported in?',
-        'choices': ['EzMode4Chefs', 'Wop'],
+        'choices': ['EzMode4Chefs', 'Wop', 'Hayha'],
         'filter': lambda val: val.lower()
     },
     {
@@ -188,6 +189,12 @@ questions = [
         'name': 'wopProxy',
         'message': 'Enter a proxy to use for tasks (or leave blank)',
         'when': lambda answers: answers.get('export', "") == 'wop'
+    },
+    {
+        'type': 'input',
+        'name': 'hayhaGroupID',
+        'message': 'Enter a group ID from the Hayha Export',
+        'when': lambda answers: answers.get('export', "") == 'hayha'
     },
     {
         'type': 'input',
@@ -347,7 +354,7 @@ if __name__ == "__main__":
     generator = Generator(promptsettings['firstNames'].split(','), promptsettings['lastNames'].split(','), promptsettings['email'], 
     promptsettings['phoneNumber'], promptsettings['addressLine1'], promptsettings['addressLine2'], promptsettings['city'], 
     promptsettings['state'], promptsettings['zipCode'], promptsettings.get('emailPrefix', ""), promptsettings['phoneJig'], promptsettings['addressJig'], promptsettings['addressJig2'], 
-    promptsettings.get('wopWebhook', ""), promptsettings.get('wopProxy', ""))
+    promptsettings.get('wopWebhook', ""), promptsettings.get('wopProxy', ""), promptsettings.get("hayhaGroupID", ""))
 
     if (promptsettings['cardProvider'] == "privacy"):
         privacysession = PrivacySession(promptsettings['privacyEmail'], promptsettings['privacyPassword'])
@@ -390,5 +397,9 @@ if __name__ == "__main__":
             file_exists = os.path.isfile("exports/" + timestr + "wop.csv")
             csvexporter = CSVIO("", "exports/" + timestr + "wop.csv", templates, generator)
             csvexporter.writeWop(cardlist, file_exists)
+        elif (promptsettings['export'] == 'hayha'):
+            file_exists = os.path.isfile("exports/" + timestr + "hayha.csv")
+            csvexporter = CSVIO("", "exports/" + timestr + "hayha.csv", templates, generator)
+            csvexporter.writeHayha(cardlist, file_exists)
 
     print("Generated profiles, check exports folder!")

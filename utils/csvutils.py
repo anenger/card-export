@@ -1,6 +1,7 @@
 import csv
 from utils.generators import Generator
 from utils.card import Card
+import uuid
 
 class CSVIO:
     infile = ""
@@ -62,6 +63,31 @@ class CSVIO:
                 export['Billing Zip'] = self.generator.zip
                 export['Billing State'] = self.generator.state
                 export['Billing Country'] = "US"
+                writer.writerow(export)
+
+    def writeHayha(self, cards, file_exists):
+        with open(self.outfile, mode='a+') as cardfile:
+            writer = csv.DictWriter(cardfile, fieldnames=self.templates['hayha'].keys(), delimiter=',', lineterminator='\n')
+            if not file_exists:
+                writer.writeheader()
+            for card in cards:
+                export = self.templates['hayha'].copy()
+                export['profilename'] = card.cardid
+                export['FirstName'], export['LastName'] = self.generator.genName()
+                export['AddressLine1'] = self.generator.genStreet()
+                export['AddressLine2'] = self.generator.genAddress2()
+                export['City'] = self.generator.city
+                export['Zipcode'] = self.generator.zip
+                export['StateEntry'] = self.generator.state
+                export['Country'] = "US"
+                export['Email'] = self.generator.genEmail()
+                export['Phone'] = self.generator.genPhone()
+                export['CreditCardNumber'] = card.number
+                export['CreditCardMonth'] = card.expmonth
+                export['CreditCardYear'] = '20' + str(card.expyear)
+                export['CVV'] = card.cvv
+                export['id'] = str(uuid.uuid4())
+                export['group'] = self.generator.groupid
                 writer.writerow(export)
 
     def readCSV(self):

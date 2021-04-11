@@ -96,6 +96,26 @@
 		"Shipping State":"",
 		"Shipping Country":""
 	},
+	"hayha":{
+		"profilename":"",
+		"FirstName":"",
+		"LastName":"",
+		"AddressLine1":"",
+		"AddressLine2":"",
+		"City":"",
+		"Zipcode":"",
+		"StateEntry":"",
+		"Country":"",
+		"Email": "",
+		"Phone":"",
+		"SNKRSEnabled": "false",
+		"CreditCardNumber": "",
+		"CreditCardMonth": "",
+		"CreditCardYear": "",
+		"CVV":"",
+		"id":"",	
+		"group":""
+	},
 	"import":{
 		"Merchant":"",
 		"LeftOnCard":"",
