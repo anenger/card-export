@@ -1,4 +1,4 @@
 regex
 requests
-PyInquirer
+PyInquirer==1.0.3
 stripe

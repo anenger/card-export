@@ -6,10 +6,9 @@ import sys
 import time
 import os
 import uuid
-from pprint import pprint
+import re as regex
 
-import regex
-import requests
+from pprint import pprint
 from PyInquirer import ValidationError, Validator, prompt, style_from_dict, Token
 
 from utils.card import Card
